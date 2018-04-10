@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.o7planning.restfulcrud.model.StudentDTO;
 
 /**
@@ -25,7 +26,7 @@ public class EstudianteServicio {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public List<StudentDTO> getStudent_JSON() throws ConexionException {
+    public Response getStudent_JSON() throws ConexionException {
         List<StudentDTO> studentsDTO = new ArrayList<StudentDTO>();
         StudentFacade facade = null;
 
@@ -39,7 +40,10 @@ public class EstudianteServicio {
             studentsDTO.add(dto);
         }
 
-        return studentsDTO;
+        return Response.status(Response.Status.OK)
+                .header("location", "")
+                .entity(studentsDTO)
+                .build();
     }
 
     // URI:
@@ -53,12 +57,22 @@ public class EstudianteServicio {
 
         facade = new StudentFacade();
         Student studente = facade.get(Integer.parseInt(id));
-        dto = new StudentDTO();
-        dto.setId(studente.getId());
-        dto.setName(studente.getName());
-        dto.setAge(studente.getAge());
-
-        return dto;
+        
+        if(studente != null){
+            dto = new StudentDTO();
+            dto.setId(studente.getId());
+            dto.setName(studente.getName());
+            dto.setAge(studente.getAge());
+            
+            return Response.status(Response.Status.CREATED)
+                .entity(dto)
+                .build();
+        } 
+        else{
+          return Response.status(Response.Status.NOT_FOUND)
+                 .build();
+        }
+        
     }
 
     // URI:
@@ -66,7 +80,7 @@ public class EstudianteServicio {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public StudentDTO addStudent(StudentDTO student) throws ConexionException {
+    public Response addStudent(StudentDTO student) throws ConexionException {
         StudentFacade facade = null;
         StudentDTO dto = null;
 
@@ -75,9 +89,17 @@ public class EstudianteServicio {
         studentJPA.setId(student.getId());
         studentJPA.setName(student.getName());
         studentJPA.setAge(student.getAge());
-        facade.save(studentJPA);
+        dto = facade.save(studentJPA);
 
-        return dto;
+        if(dto != null){
+           return Response.status(Response.Status.CREATED)
+                .entity(dto)
+                .build();
+        }else{
+           return Response.status(Response.Status.NOT_MODIFIED)
+                 .build();
+        }
+        
     }
 
     // URI:
@@ -85,7 +107,7 @@ public class EstudianteServicio {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public StudentDTO updateEmployee(StudentDTO student) throws ConexionException {
+    public Response updateEmployee(StudentDTO student) throws ConexionException {
         StudentFacade facade = null;
         StudentDTO dto = null;
 
@@ -94,9 +116,18 @@ public class EstudianteServicio {
         studentJPA.setId(student.getId());
         studentJPA.setName(student.getName());
         studentJPA.setAge(student.getAge());
-        facade.update(studentJPA);
+        dto = facade.update(studentJPA);
 
-        return dto;
+        
+        if(dto != null){
+           return Response.status(Response.Status.CREATED)
+                .entity(dto)
+                .build();
+        }else{
+           return Response.status(Response.Status.NOT_MODIFIED)
+                 .build();
+        }
+      
     }
 
     @DELETE
