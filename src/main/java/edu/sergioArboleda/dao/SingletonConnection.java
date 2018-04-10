@@ -33,6 +33,10 @@ public class SingletonConnection {
                 em = emf.createEntityManager();
               em.getTransaction().begin();
            }
+       
+       emf.getCache().evictAll();
+       em.clear();
+         
            return em;
     }
     

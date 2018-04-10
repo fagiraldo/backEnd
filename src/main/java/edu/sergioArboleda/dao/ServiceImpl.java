@@ -30,7 +30,18 @@ public class ServiceImpl<T> implements Service<T>  {
     }
 
     public void delete(T object){
+       if(!entityManager.getTransaction().isActive())
+             entityManager.getTransaction().begin();
         entityManager.remove(object);
+        
+        try {
+             entityManager.flush();
+             entityManager.clear();
+             
+          } catch (PersistenceException exception) {
+             throw new RuntimeException(exception);
+          }
+        
         entityManager.getTransaction().commit();
         
     }
@@ -40,6 +51,8 @@ public class ServiceImpl<T> implements Service<T>  {
              entityManager.createQuery("select x from " + 
                                                       getEntityName() + " x");
         
+        query.setHint("javax.persistence.cache.storeMode", "REFRESH");
+        query.setHint("eclipselink.refresh", "true");
         return (List<T>) query.getResultList();
     }
 
