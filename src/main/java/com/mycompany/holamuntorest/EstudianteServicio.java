@@ -48,7 +48,7 @@ public class EstudianteServicio {
     @GET
     @Path("/{empNo}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getEmployee(@PathParam("id") String id) throws ConexionException {
+    public StudentDTO getEmployee(@PathParam("id") String id) throws ConexionException {
         StudentFacade facade = null;
         StudentDTO dto = null;
 
@@ -61,15 +61,10 @@ public class EstudianteServicio {
             dto.setName(studente.getName());
             dto.setAge(studente.getAge());
             
-            return Response.status(Response.Status.CREATED)
-                .entity(dto)
-                .build();
+            return dto;
+        }else{
+          return null;
         } 
-        else{
-          return Response.status(Response.Status.NOT_FOUND)
-                 .build();
-        }
-        
     }
 
     // URI:
@@ -77,7 +72,7 @@ public class EstudianteServicio {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response addStudent(StudentDTO student) throws ConexionException {
+    public StudentDTO addStudent(StudentDTO student) throws ConexionException {
         StudentFacade facade = null;
         facade = new StudentFacade();
         Student studentJPA = new Student();
@@ -85,9 +80,7 @@ public class EstudianteServicio {
         studentJPA.setName(student.getName());
         studentJPA.setAge(student.getAge());
         facade.save(studentJPA);
-
-        return Response.status(Response.Status.CREATED)
-                .build();
+        return student;
     }
 
     // URI:
@@ -95,7 +88,7 @@ public class EstudianteServicio {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response updateEmployee(StudentDTO student) throws ConexionException {
+    public StudentDTO updateEmployee(StudentDTO student) throws ConexionException {
         StudentFacade facade = null;
      
         facade = new StudentFacade();
@@ -104,10 +97,7 @@ public class EstudianteServicio {
         studentJPA.setName(student.getName());
         studentJPA.setAge(student.getAge());
         facade.update(studentJPA);
-
-        
-        return Response.status(Response.Status.CREATED)
-                .build();
+        return student;
     }
 
     @DELETE
