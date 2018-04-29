@@ -26,7 +26,7 @@ public class EstudianteServicio {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getStudent_JSON() throws ConexionException {
+    public List<StudentDTO> getStudent_JSON() throws ConexionException {
         List<StudentDTO> studentsDTO = new ArrayList<StudentDTO>();
         StudentFacade facade = null;
 
@@ -40,9 +40,7 @@ public class EstudianteServicio {
             studentsDTO.add(dto);
         }
 
-        return Response.status(Response.Status.OK)
-                .entity(studentsDTO)
-                .build();
+        return studentsDTO;
     }
 
     // URI:
