@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author fabian.giraldo
  */
-@XmlRootElement(name = "employee")
+@XmlRootElement(name = "student")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class StudentDTO {
      private int id;

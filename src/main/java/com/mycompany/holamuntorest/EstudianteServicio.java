@@ -41,7 +41,6 @@ public class EstudianteServicio {
         }
 
         return Response.status(Response.Status.OK)
-                .header("location", "")
                 .entity(studentsDTO)
                 .build();
     }
