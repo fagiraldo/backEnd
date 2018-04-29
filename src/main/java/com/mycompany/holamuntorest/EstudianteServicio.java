@@ -51,7 +51,7 @@ public class EstudianteServicio {
     @GET
     @Path("/{empNo}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public StudentDTO getEmployee(@PathParam("id") String id) throws ConexionException {
+    public Response getEmployee(@PathParam("id") String id) throws ConexionException {
         StudentFacade facade = null;
         StudentDTO dto = null;
 
@@ -82,24 +82,15 @@ public class EstudianteServicio {
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response addStudent(StudentDTO student) throws ConexionException {
         StudentFacade facade = null;
-        StudentDTO dto = null;
-
         facade = new StudentFacade();
         Student studentJPA = new Student();
         studentJPA.setId(student.getId());
         studentJPA.setName(student.getName());
         studentJPA.setAge(student.getAge());
-        dto = facade.save(studentJPA);
+        facade.save(studentJPA);
 
-        if(dto != null){
-           return Response.status(Response.Status.CREATED)
-                .entity(dto)
+        return Response.status(Response.Status.CREATED)
                 .build();
-        }else{
-           return Response.status(Response.Status.NOT_MODIFIED)
-                 .build();
-        }
-        
     }
 
     // URI:
@@ -109,36 +100,29 @@ public class EstudianteServicio {
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response updateEmployee(StudentDTO student) throws ConexionException {
         StudentFacade facade = null;
-        StudentDTO dto = null;
-
+     
         facade = new StudentFacade();
         Student studentJPA = new Student();
         studentJPA.setId(student.getId());
         studentJPA.setName(student.getName());
         studentJPA.setAge(student.getAge());
-        dto = facade.update(studentJPA);
+        facade.update(studentJPA);
 
         
-        if(dto != null){
-           return Response.status(Response.Status.CREATED)
-                .entity(dto)
+        return Response.status(Response.Status.CREATED)
                 .build();
-        }else{
-           return Response.status(Response.Status.NOT_MODIFIED)
-                 .build();
-        }
-      
     }
 
     @DELETE
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public void deleteEmployee(@PathParam("id") String id) throws ConexionException {
+    public Response deleteEmployee(@PathParam("id") String id) throws ConexionException {
         StudentFacade facade = null;
 
         facade = new StudentFacade();
         Student student = facade.get(Integer.parseInt(id));
         facade.delete(student);
-
+        return Response.status(Response.Status.CREATED)
+                .build();
     }
 }

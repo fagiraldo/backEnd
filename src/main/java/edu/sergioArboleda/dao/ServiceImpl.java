@@ -78,8 +78,6 @@ public class ServiceImpl<T> implements Service<T>  {
         
         entityManager.getTransaction().commit();
         
-        
-        
     }
 
     public T update(T object){
